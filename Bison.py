@@ -14,13 +14,13 @@ import matplotlib.pyplot as plt
 #function eat (Bison eating grass in the field, they eat 2 unit per loop per bison)
 def eat(bison_present,food_available,fieldsize):
     for row in range(0, fieldsize):
-        for column in range(0, fieldsize):		
+        for column in range(0, fieldsize):      
             if bison_present[row][column]==1:
                 if food_available[row][column] >=2:
-		    food_available[row][column] -=2
-		elif food_available[row][column] == 1:
-		    food_available[row][column] = 0
-	#print food_available
+            food_available[row][column] -=2
+        elif food_available[row][column] == 1:
+            food_available[row][column] = 0
+    #print food_available
 
 #defining fuction for stop_condition, time to move fields
 def empty_square(food_available):
@@ -32,7 +32,7 @@ def empty_square(food_available):
 #defining function for grass regrowth in field
 def grass_growth(food_available):
     for row in range(0, fieldsize):
-        for column in range(0, fieldsize):		
+        for column in range(0, fieldsize):      
             food_available[row][column]+= 1
 
 #defining fuction for reproduction, 2 bison every 5 loops
@@ -94,7 +94,7 @@ for j in range(0, fieldsize, n):
 
 #adding in bison from the user input to the bison space which was made above
 for numb in range(0, number_bison):
-    add_bison(bison_present, fieldsize)	
+    add_bison(bison_present, fieldsize) 
 #print bison_present
 
 
@@ -110,7 +110,7 @@ while (empty_square(food_available)):
         grass_growth(food_available)
     l=(l+1)%m
     if l==4:
-	
+    
         reproduction(bison_present, fieldsize)
     
 #shows end result of the amount of grass in each sqaure of the field and prints it to a file in the project folder
@@ -122,13 +122,13 @@ while (empty_square(food_available)):
     sns.plt.savefig(figname)
     if not empty_square(bison_present):
         #shows end result of the ammount of bison in the field and prints it to a file in the project folder
-        plt.figure()	
+        plt.figure()    
         sns.set()
         sns.heatmap(bison_present, cmap="Greys")
         plt.title("Location of bison in the field")
         figname2="Fig_cycle_bison"+ str(x) + ".png"
         sns.plt.savefig(figname2)
-	
+    
 
 #sns.plt.show()
 #print x shows how many cycles (months) it has taken for the field to have any square with no grass. This shows the farmer he/she now needs to move the bison to a new field otherwise the bison in that square may die as there is no more food for it to eat.
