@@ -40,7 +40,9 @@ def eat(bison_present, food_available,fieldsize):
     for row in range(1, fieldsize+1):
         for column in range(1, fieldsize+1):      
             if bison_present[row-1][column-1]:
-                food_available[row-1][column-1] = eat_conditions(bigger_grid[row][column], 2)
+                for r in range(-1,2):
+                    for j in range(-1,2):
+                        food_available[row-1+r][column-1+j] = eat_conditions(bigger_grid[row+r][column+j], 2)
     
     return food_available
                 
