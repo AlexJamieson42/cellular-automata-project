@@ -13,23 +13,39 @@ import numpy as np
 #List of functions
 
 #function eat (Bison eating grass in the field, they eat 2 unit per loop per bison)
-def eat(bison_present,food_available,fieldsize):
-    """
-    Bison will *attempt* to eat 2 random squares...
 
-    Hacky solution as I don't really have time to help but I
-    seem to like sticking my oar in...
+#the bison eat food from every square around them
+#if there is no food in the square then it doesn't eat from that square
+
+def eat_conditions(food_square, amount_to_eat):
     """
-    units_eaten = 2
-    for munch_sess in range(units_eaten):
-        #get a matrix of some adjacent cells (which *could* be food)
-        adj_square = random_adj_square(bison_present)
-        #subtract it from good available
-        food_available -= adj_square #this would work if they were numpy arrays... i hope they are...
+    Eat 2 from the square, if there's not 2 there, eat it all!!!
+    """
+    if food_square > amount_to_eat:
+        food_square -= amount_to_eat
+    else:
+        #there's not enough for one meal so I'm going to EAT it ALL!!! 
+        food_square = 0
+    return food_square
+
+def eat(bison_present, food_available,fieldsize):
+    bigger_grid = np.zeros([fieldsize+2, fieldsize+2])
+    #put previous array into the middle of larger one
+    for i in range(1,fieldsize+1):
+        for j in range(1,fieldsize+1):
+            bigger_grid[i,j] = food_available[i-1,j-1]
+    print(bigger_grid)
+    
+    #as grid is inside larger one, edge conditions don't matter
+    for row in range(1, fieldsize+1):
+        for column in range(1, fieldsize+1):      
+            if bison_present[row-1][column-1]:
+                food_available[row-1][column-1] = eat_conditions(bigger_grid[row][column], 2)
+    
     return food_available
-
-
-    #print food_available
+                
+                
+     
 
 #defining fuction for stop_condition, time to move fields
 def empty_square(food_available):
