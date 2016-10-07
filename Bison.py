@@ -7,6 +7,7 @@ import copy
 import random as rnd
 import seaborn as sns
 import matplotlib.pyplot as plt 
+import numpy as np
 
 
 #List of functions
@@ -16,10 +17,16 @@ def eat(bison_present,food_available,fieldsize):
     for row in range(0, fieldsize):
         for column in range(0, fieldsize):		
             if bison_present[row][column]==1:
-                if food_available[row][column] >=2:
-		    food_available[row][column] -=2
-		elif food_available[row][column] == 1:
-		    food_available[row][column] = 0
+                for r in range(1,2):
+                    for c in range(-1,2):
+                        try:
+                            if food_available[row+r][column+c] >=2:
+		                food_available[row+r][column+c] -=2
+		            elif food_available[row+r][column+c] == 1:
+		                food_available[row+r][column+c] = 0
+                            continue
+                        except:
+                            pass
 	#print food_available
 
 #defining fuction for stop_condition, time to move fields
@@ -51,18 +58,46 @@ def add_bison(bison_present, fieldsize):
         elif bison_present[xbison][ybison]==1:
             add_bison(bison_present, fieldsize)
 
+def random_direction():
+    direction=rnd.randint(-1,1)
+    return direction
+
+def random_adj_square(bison_present):
+    (l,m)=np.shape(bison_present)
+    for i in range(l):
+        for j in range(m):
+            if bison_present[i][j]:
+                movement=[i+random_direction(), j +random_direction()]
+                if movement[0]>(l-1):
+                    movement[0]=movement[0]-l
+                if movement[0]<0:
+                    movement[0]=movement[0]+l
+                if movement[1]>(m-1):
+                    movement[1]=movement[1]-m
+                if movement[1]<0:
+                    movement[1]=movement[1]+m
+                if not bison_present[movement[0]][movement[1]]:
+                    bison_present[movement[0]][movement[1]]
+                    bison_present[movement[0]][movement[1]]=True
+                    bison_present[i][j]=False
+    return bison_present
+
+	
+	
+
 
 #Defining variables below
 food_row = []
 food_available = []
 bison_row = []
 bison_present = []
-x=0
-y=0
-k=3
-l=0
-m=5
-n=1
+#add in comments of what each of the below are
+x=0 #month counter
+y=0 #grass growth counter
+k=3 #reproduction counter
+l=0 #divider for modulus
+m=5 #divider for modulus
+n=1 #counter
 #user inputs field size which will print a square field e.g. user inputs 5 field will be 5x5 squares big 
 print "How big is your field?"
 fieldsize = int(raw_input ('<'))
@@ -104,6 +139,7 @@ for numb in range(0, number_bison):
 #print "Bison eat food"
 while (empty_square(food_available)):
     eat(bison_present,food_available,fieldsize)
+    random_adj_square(bison_present)
     x += 1
     y=(y+1)%k
     if y==2:
@@ -139,15 +175,13 @@ print x
 
 
 
-# put these into the while loop to plot all the months
 #ax = sns.heatmap(bison_square, annot=True, fmt="d") gives you data labels 
 #cmap changes the colours of the heatmap
 
-#bison to reproduce with 2 offspring every 5 loops (move to correct location)
 
 #end result is a field with any sqaure with no food. This then means the bison need to move fields. All field can be full of bison but only move them when food has run out for 1 bison. 
 
-#tomorrow, tidy code and write up and learn to make images 
+#tomorrow add in eating either side of the square they are in 
 
 
 
