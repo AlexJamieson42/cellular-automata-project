@@ -19,12 +19,12 @@ import numpy as np
 
 def eat_conditions(food_square, amount_to_eat):
     """
-    Eat 2 from the square, if there's not 2 there, eat it all!!!
+    Eat 2 from the square, if there's not 2 there, eat all the food 
     """
     if food_square > amount_to_eat:
         food_square -= amount_to_eat
     else:
-        #there's not enough for one meal so I'm going to EAT it ALL!!! 
+        #there's not enough for one meal so all gets eaten
         food_square = 0
     return food_square
 
