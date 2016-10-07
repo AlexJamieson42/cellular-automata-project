@@ -14,19 +14,21 @@ import numpy as np
 
 #function eat (Bison eating grass in the field, they eat 2 unit per loop per bison)
 def eat(bison_present,food_available,fieldsize):
-    for row in range(0, fieldsize):
-        for column in range(0, fieldsize):      
-            if bison_present[row][column]==1:
-                for r in range(1,2):
-                    for c in range(-1,2):
-                        try:
-                            if food_available[row+r][column+c] >=2:
-                        food_available[row+r][column+c] -=2
-                    elif food_available[row+r][column+c] == 1:
-                        food_available[row+r][column+c] = 0
-                            continue
-                        except:
-                            pass
+    """
+    Bison will *attempt* to eat 2 random squares...
+
+    Hacky solution as I don't really have time to help but I
+    seem to like sticking my oar in...
+    """
+    units_eaten = 2
+    for munch_sess in range(units_eaten):
+        #get a matrix of some adjacent cells (which *could* be food)
+        adj_square = random_adj_square(bison_present)
+        #subtract it from good available
+        food_available -= adj_square #this would work if they were numpy arrays... i hope they are...
+    return food_available
+
+
     #print food_available
 
 #defining fuction for stop_condition, time to move fields
