@@ -21,13 +21,13 @@ def eat(bison_present,food_available,fieldsize):
                     for c in range(-1,2):
                         try:
                             if food_available[row+r][column+c] >=2:
-		                food_available[row+r][column+c] -=2
-		            elif food_available[row+r][column+c] == 1:
-		                food_available[row+r][column+c] = 0
+                        food_available[row+r][column+c] -=2
+                    elif food_available[row+r][column+c] == 1:
+                        food_available[row+r][column+c] = 0
                             continue
                         except:
                             pass
-	#print food_available
+    #print food_available
 
 #defining fuction for stop_condition, time to move fields
 def empty_square(food_available):
@@ -82,8 +82,8 @@ def random_adj_square(bison_present):
                     bison_present[i][j]=False
     return bison_present
 
-	
-	
+    
+    
 
 
 #Defining variables below
