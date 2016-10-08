@@ -13,21 +13,41 @@ import numpy as np
 #List of functions
 
 #function eat (Bison eating grass in the field, they eat 2 unit per loop per bison)
-def eat(bison_present,food_available,fieldsize):
-    for row in range(0, fieldsize):
-        for column in range(0, fieldsize):		
-            if bison_present[row][column]==1:
-                for r in range(1,2):
-                    for c in range(-1,2):
-                        try:
-                            if food_available[row+r][column+c] >=2:
-		                food_available[row+r][column+c] -=2
-		            elif food_available[row+r][column+c] == 1:
-		                food_available[row+r][column+c] = 0
-                            continue
-                        except:
-                            pass
-	#print food_available
+
+#the bison eat food from every square around them
+#if there is no food in the square then it doesn't eat from that square
+
+def eat_conditions(food_square, amount_to_eat):
+    """
+    Eat 2 from the square, if there's not 2 there, eat all the food 
+    """
+    if food_square > amount_to_eat:
+        food_square -= amount_to_eat
+    else:
+        #there's not enough for one meal so all gets eaten
+        food_square = 0
+    return food_square
+
+def eat(bison_present, food_available,fieldsize):
+    bigger_grid = np.zeros([fieldsize+2, fieldsize+2])
+    #put previous array into the middle of larger one
+    for i in range(1,fieldsize+1):
+        for j in range(1,fieldsize+1):
+            bigger_grid[i,j] = food_available[i-1,j-1]
+    print(bigger_grid)
+    
+    #as grid is inside larger one, edge conditions don't matter
+    for row in range(1, fieldsize+1):
+        for column in range(1, fieldsize+1):      
+            if bison_present[row-1][column-1]:
+                for r in range(-1,2):
+                    for j in range(-1,2):
+                        food_available[row-1+r][column-1+j] = eat_conditions(bigger_grid[row+r][column+j], 2)
+    
+    return food_available
+                
+                
+     
 
 #defining fuction for stop_condition, time to move fields
 def empty_square(food_available):
@@ -39,7 +59,7 @@ def empty_square(food_available):
 #defining function for grass regrowth in field
 def grass_growth(food_available):
     for row in range(0, fieldsize):
-        for column in range(0, fieldsize):		
+        for column in range(0, fieldsize):      
             food_available[row][column]+= 1
 
 #defining fuction for reproduction, 2 bison every 5 loops
@@ -82,8 +102,8 @@ def random_adj_square(bison_present):
                     bison_present[i][j]=False
     return bison_present
 
-	
-	
+    
+    
 
 
 #Defining variables below
@@ -129,7 +149,7 @@ for j in range(0, fieldsize, n):
 
 #adding in bison from the user input to the bison space which was made above
 for numb in range(0, number_bison):
-    add_bison(bison_present, fieldsize)	
+    add_bison(bison_present, fieldsize) 
 #print bison_present
 
 
@@ -146,7 +166,7 @@ while (empty_square(food_available)):
         grass_growth(food_available)
     l=(l+1)%m
     if l==4:
-	
+    
         reproduction(bison_present, fieldsize)
     
 #shows end result of the amount of grass in each sqaure of the field and prints it to a file in the project folder
@@ -158,13 +178,13 @@ while (empty_square(food_available)):
     sns.plt.savefig(figname)
     if not empty_square(bison_present):
         #shows end result of the ammount of bison in the field and prints it to a file in the project folder
-        plt.figure()	
+        plt.figure()    
         sns.set()
         sns.heatmap(bison_present, cmap="Greys")
         plt.title("Location of bison in the field")
         figname2="Fig_cycle_bison"+ str(x) + ".png"
         sns.plt.savefig(figname2)
-	
+    
 
 #sns.plt.show()
 #print x shows how many cycles (months) it has taken for the field to have any square with no grass. This shows the farmer he/she now needs to move the bison to a new field otherwise the bison in that square may die as there is no more food for it to eat.
